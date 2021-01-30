@@ -1,0 +1,50 @@
+http:
+  port: 8080
+admin:
+  port: 5555
+  host: localhost
+apiEndpoints:
+  apiApp1:
+    host: localhost
+    paths: '/app1/*'
+  
+  apiApp2:
+    host: localhost
+    paths: '/service-api/*'
+serviceEndpoints:
+  app1:
+    url: 'http://localhost:3000'
+  
+  app2:
+    url: 'http://localhost:4000'
+policies:
+  # - basic-auth
+  # - cors
+  # - expression
+  # - key-auth
+  # - log
+  # - oauth2
+  # - proxy
+  # - rate-limit
+pipelines:
+  app1:
+    apiEndpoints:
+      - apiApp1
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: app1
+              changeOrigin: true
+
+  app2:
+    apiEndpoints:
+      - service-api
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: service-api
+              changeOrigin: true
